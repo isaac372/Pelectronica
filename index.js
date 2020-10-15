@@ -34,6 +34,9 @@ console.log("conectado desde cliente")
   });
 });
 
+app.get("/", (req, resp) => {
+  resp.send("HOLa mundo como se encuentran hoy");
+});
 
 
 const PORT = process.env.PORT || 4000;
