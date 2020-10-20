@@ -11,8 +11,6 @@ const conectarDB = require("./config/db");
 
 conectarDB();
 
-
-
 //app.use('/api/Temp',require('./routes/mostrardata'));
 const Board = new SerialPort("COM3", {
   baudRate: 9600,
@@ -32,8 +30,7 @@ Board.on('data',  async (data)=>{
   // User=new modelTemp(body);
   //   await User.save()
 
-  const ver=await modelTemp.find().sort({temperatura:-1}).limit(1)
-  io.emit("temperatura", ver);
+
 
     
   } catch (error) {
@@ -49,13 +46,17 @@ Board.on("error", function (error) {
   console.log(error);
 });
 
-// io.on("connection", (socket) => {
-//   socket.on("conectado", () => {
-// console.log("conectado desde cliente")
+io.on("connection", (socket) => {
+  socket.on("conectado", () => {
+console.log("conectado desde cliente")
+
 
    
-//   });
-// });
+  });
+
+  // const ver= modelTemp.find().sort({temperatura:-1}).limit(1)
+  // io.emit("temperatura", ver);
+});
 
 app.get("/", (req, resp) => {
   resp.send("HOLa mundo como se encuentran hoy");
