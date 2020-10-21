@@ -53,9 +53,9 @@ const ondear = async () => {
       luminicidad: luz,
     };
 
-    console.log(body)
-    User=new modelTemp(body);
-      await User.save()
+    // console.log(body)
+    // User=new modelTemp(body);
+    //   await User.save()
 
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
 
