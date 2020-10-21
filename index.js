@@ -5,8 +5,8 @@ const app = express();
 const http = require("http");
 const servidor = http.createServer(app.use(cors(),bodyParser.json()));
 const socketio = require("socket.io");
-const allowedOrigins = "https://silly-liskov-87a99a.netlify.app/";
-const io = socketio(servidor, {origins:allowedOrigins});
+const serveClient = "https://silly-liskov-87a99a.netlify.app/";
+const io = socketio(servidor, { serveClient : true });
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
 //modelo de la base de datos
