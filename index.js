@@ -1,71 +1,71 @@
 const express = require("express");
- const http = require("http");
+const http = require("http");
 const app = express();
 const servidor = http.createServer(app);
 const socketio = require("socket.io");
 const io = socketio(servidor);
-const modelTemp=require('./models/Modeltemp')
-const SerialPort = require("serialport");
-
+const { Board, Sensor, Led } = require("johnny-five");
+const board = new Board();
+//modelo de la base de datos
+const modelTemp = require("./models/Modeltemp");
+///base de datos
 const conectarDB = require("./config/db");
-
 conectarDB();
 
-//app.use('/api/Temp',require('./routes/mostrardata'));
-const Board = new SerialPort("COM3", {
-  baudRate: 9600,
+let ldr, lm35, celsuistemp;
+let led11, led12, led13;
+
+board.on("ready", () => {
+  const SendorTemperatura = { pin: "A0", freq: 50 };
+  const SendorLuz = { pin: "A1", freq: 50 };
+  lm35 = new Sensor(SendorTemperatura);
+  ldr = new Sensor(SendorLuz);
+
+  ondear();
 });
 
-Board.on('open', function () {
-  console.log("Conexion Abierta");
-});
+const ondear = async () => {
+  const temp = lm35.value;
+  const luz = ldr.value;
+  led11 = new Led(11);
+  led12 = new Led(12);
+  led13 = new Led(13);
+  celsuistemp = (5 * temp * 100) / 1024;
+  if (celsuistemp > 22) {
+    led13.on();
+    led12.off();
+  } else {
+    led12.on();
+    led13.off();
+  }
 
-Board.on('data',  async (data)=>{
+  if (luz < 75) {
+    led11.on();
+  } else {
+    led11.off();
+  }
   try {
-    
-  let body={
- temperatura:parseInt(data,10)
-  }
-  console.log(body)
-  // User=new modelTemp(body);
-  //   await User.save()
+    let body = {
+      temperatura: parseInt(celsuistemp),
+      luminicidad: luz,
+    };
 
+    // console.log(body)
+    // User=new modelTemp(body);
+    //   await User.save()
 
+    const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
 
-    
+    console.log(ver);
+    io.emit("temperatura", ver);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  
 
-  //
-})
-
-
-Board.on("error", function (error) {
-  console.log(error);
-});
-
-io.on("connection", (socket) => {
-  socket.on("conectado", () => {
-console.log("conectado desde cliente")
-
-
-   
-  });
-
-  // const ver= modelTemp.find().sort({temperatura:-1}).limit(1)
-  // io.emit("temperatura", ver);
-});
-
-app.get("/", (req, resp) => {
-  resp.send("HOLa mundo como se encuentran hoy");
-});
-
+  setTimeout(ondear, 1000);
+};
 
 const PORT = process.env.PORT || 4000;
 servidor.listen(PORT, () => {
   console.log(`el puerto esta funcionando  ${PORT}`);
 });
-
-
