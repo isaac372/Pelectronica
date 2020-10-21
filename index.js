@@ -5,8 +5,8 @@ const app = express();
 const http = require("http");
 const servidor = http.createServer(app.use(cors(),bodyParser.json()));
 const socketio = require("socket.io");
-const serveClient = "https://silly-liskov-87a99a.netlify.app/";
-const io = socketio(servidor, { serveClient : true });
+
+const io = socketio(servidor);
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
 //modelo de la base de datos
@@ -53,9 +53,9 @@ const ondear = async () => {
       luminicidad: luz,
     };
 
-    // console.log(body)
-    // User=new modelTemp(body);
-    //   await User.save()
+    console.log(body)
+    User=new modelTemp(body);
+      await User.save()
 
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
 
@@ -65,7 +65,7 @@ const ondear = async () => {
     console.log(error);
   }
 
-  setTimeout(ondear, 1000);
+  setTimeout(ondear, 5000);
 };
 
 const PORT = process.env.PORT || 4000;
