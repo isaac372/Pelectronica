@@ -103,7 +103,7 @@ const ondear = async () => {
   setTimeout(ondear, 1000);
 };
 
-const PORT = process.env.PORT || 4000;
-servidor.listen(PORT, () => {
-  console.log(`el puerto esta funcionando  ${PORT}`);
+const port = process.env.PORT || 4000;
+servidor.listen(port,'0.0.0.0', () => {
+  console.log(`el puerto esta funcionando  ${port}`);
 });
