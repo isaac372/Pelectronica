@@ -8,6 +8,7 @@ const http = require("http");
 const servidor = http.createServer(app);
 const socketio = require("socket.io");
 const io = socketio(servidor);
+io.origins('*')
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
 //modelo de la base de datos
@@ -88,7 +89,7 @@ const ondear = async () => {
       gas:valueM2
     };
 
-    //console.log(body)
+    // console.log(body)
     // User=new modelTemp(body);
     //   await User.save()
 
@@ -100,7 +101,7 @@ const ondear = async () => {
     console.log(error);
   }
 
-  setTimeout(ondear, 3000);
+  setTimeout(ondear, 1000);
 };
 
 const PORT = process.env.PORT || 4000;
