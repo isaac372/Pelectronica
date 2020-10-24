@@ -8,7 +8,6 @@ const http = require("http");
 const servidor = http.createServer(app);
 const socketio = require("socket.io");
 const io = socketio(servidor);
-io.origins('*')
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
 //modelo de la base de datos
