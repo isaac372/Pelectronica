@@ -95,7 +95,13 @@ const ondear = async () => {
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
 
      console.log(ver);
-    io.emit("temperatura", ver);
+    
+     io.sockets.on('connection', function (socket) {
+
+      socket.emit("temperatura", ver);
+     })
+     
+   // io.emit("temperatura", ver);
   } catch (error) {
     console.log(error);
   }
