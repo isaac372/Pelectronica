@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
-app.use(cors({credentials: true, origin: true}));
+app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.json());
 const http = require("http");
 const servidor = http.createServer(app);
@@ -20,7 +20,9 @@ conectarDB();
 let MQ135, LM35, LDR;
 //Led a Encender
 let celsuistemp, ledAire, ledC02, ledGas, led11, led12, led13;
-let valueM0="",valueM1="",valueM2="";
+let valueM0 = "",
+  valueM1 = "",
+  valueM2 = "";
 
 board.on("ready", () => {
   const Sensor_Aire_CO2_Gas = { pin: "A0", freq: 50 };
@@ -44,23 +46,25 @@ const ondear = async () => {
   led11 = new Led(11);
   led12 = new Led(12);
   led13 = new Led(13);
- console.log(valorMq135)
+  console.log(valorMq135);
   //MQ135//
   if (valorMq135 <= 55) {
     ledAire.on();
     ledC02.off();
     ledGas.off();
-    valueM0=valorMq135;
-  }  if (valorMq135 >= 56 && valorMq135 <= 65) {
+    valueM0 = valorMq135;
+  }
+  if (valorMq135 >= 56 && valorMq135 <= 65) {
     ledAire.off();
     ledC02.on();
     ledGas.off();
-    valueM1=valorMq135;
-  }  if (valorMq135 >= 74 && valorMq135 <= 350) {
+    valueM1 = valorMq135;
+  }
+  if (valorMq135 >= 74 && valorMq135 <= 350) {
     ledAire.off();
     ledC02.off();
     ledGas.on();
-    valueM2=valorMq135;
+    valueM2 = valorMq135;
   }
 
   //Temperatura//
@@ -83,9 +87,9 @@ const ondear = async () => {
     let body = {
       temperatura: parseInt(celsuistemp),
       luminicidad: valorLuz,
-      aire:valueM0,
-      co2:valueM1,
-      gas:valueM2
+      aire: valueM0,
+      co2: valueM1,
+      gas: valueM2,
     };
 
     // console.log(body)
@@ -94,14 +98,9 @@ const ondear = async () => {
 
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
 
-     console.log(ver);
-    
-     io.sockets.on('connection', function (socket) {
+    console.log(ver);
 
-      socket.emit("temperatura", ver);
-     })
-     
-   // io.emit("temperatura", ver);
+    io.emit("temperatura", ver);
   } catch (error) {
     console.log(error);
   }
@@ -110,6 +109,6 @@ const ondear = async () => {
 };
 
 const port = process.env.PORT || 4000;
-servidor.listen(port,'0.0.0.0', () => {
+servidor.listen(port, "0.0.0.0", () => {
   console.log(`el puerto esta funcionando  ${port}`);
 });
