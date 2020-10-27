@@ -6,8 +6,7 @@ app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.json());
 const http = require("http");
 const servidor = http.createServer(app);
-const socketio = require("socket.io");
-const io = socketio(servidor);
+var io = require('socket.io').listen(servidor);
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
 //modelo de la base de datos
@@ -15,6 +14,12 @@ const modelTemp = require("./models/Modeltemp");
 ///base de datos
 const conectarDB = require("./config/db");
 conectarDB();
+app.use( (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://silly-liskov-87a99a.netlify.app/"); 
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 //Sensores
 let MQ135, LM35, LDR;
