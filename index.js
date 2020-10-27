@@ -53,18 +53,27 @@ const ondear = async () => {
     ledC02.off();
     ledGas.off();
     valueM0 = valorMq135;
+    valueM1=null;
+    valueM2=null;
+    console.log("desde Aire")
   }
   if (valorMq135 >= 56 && valorMq135 <= 65) {
     ledAire.off();
     ledC02.on();
     ledGas.off();
     valueM1 = valorMq135;
+    valueM0=null;
+    valueM2=null;
+    console.log("desde Co2")
   }
   if (valorMq135 >= 74 && valorMq135 <= 350) {
     ledAire.off();
     ledC02.off();
     ledGas.on();
     valueM2 = valorMq135;
+    valueM0=null;
+    valueM1=null;
+    console.log("desde gas")
   }
 
   //Temperatura//
@@ -92,13 +101,12 @@ const ondear = async () => {
       gas: valueM2,
     };
 
-    // console.log(body)
+     
     // User=new modelTemp(body);
     //   await User.save()
 
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
-
-    console.log(ver);
+  // io.emit("temperatura", body);
 
     io.emit("temperatura", ver);
   } catch (error) {
