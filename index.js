@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 const http = require("http");
 const servidor = http.createServer(app);
 var io = require('socket.io').listen(servidor);
+
 io.origins('*:*');
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
@@ -15,6 +16,8 @@ const modelTemp = require("./models/Modeltemp");
 ///base de datos
 const conectarDB = require("./config/db");
 conectarDB();
+const expressStatusMonitor = require('express-status-monitor');
+
 
 //Sensores
 let MQ135, LM35, LDR;
@@ -120,6 +123,10 @@ const ondear = async () => {
 };
 
 const port = process.env.PORT || 4000;
+app.use(expressStatusMonitor({
+  websocket: io,
+  port: app.get(port)
+}));
 servidor.listen(port, "0.0.0.0", () => {
   console.log(`el puerto esta funcionando  ${port}`);
 });
