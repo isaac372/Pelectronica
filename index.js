@@ -14,12 +14,6 @@ const modelTemp = require("./models/Modeltemp");
 ///base de datos
 const conectarDB = require("./config/db");
 conectarDB();
-app.use( (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://silly-liskov-87a99a.netlify.app/"); 
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 //Sensores
 let MQ135, LM35, LDR;
@@ -111,7 +105,7 @@ const ondear = async () => {
     //   await User.save()
 
     const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
-  // io.emit("temperatura", body);
+  
 
     io.emit("temperatura", ver);
   } catch (error) {
