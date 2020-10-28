@@ -35,6 +35,9 @@ board.on("ready", () => {
 
   ondear();
 });
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
 const ondear = async () => {
   const valorMq135 = MQ135.value;
