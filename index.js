@@ -1,13 +1,8 @@
 const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
 const app = express();
-app.use(cors({ credentials: true, origin: true }));
-app.use(bodyParser.json());
 const http = require("http");
 const servidor = http.createServer(app);
 var io = require('socket.io').listen(servidor);
-
 io.origins('*:*');
 const { Board, Sensor, Led } = require("johnny-five");
 const board = new Board();
