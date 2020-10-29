@@ -13,7 +13,7 @@ const modelTemp = require("./models/Modeltemp");
 ///base de datos
 const conectarDB = require("./config/db");
 conectarDB();
-
+const router=express.Router();
 
 //Sensores
 let MQ135, LM35, LDR;
@@ -107,16 +107,25 @@ const ondear = async () => {
     // User=new modelTemp(body);
     //   await User.save()
 
-    const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
+    //const ver = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
   
 
-    io.emit("temperatura", ver);
+    //io.emit("temperatura", ver);
   } catch (error) {
     console.log(error);
   }
 
   setTimeout(ondear, 1000);
 };
+app.get('/arduino', async(req,res)=>{
+  try {
+    const mostrar = await modelTemp.find({}).sort({ _id: -1 }).limit(1);
+    res.json(mostrar)
+  } catch (error) {
+    res.json({message:error})
+  }
+})
+
 
 const port = process.env.PORT || 4000;
 servidor.listen(port, "0.0.0.0", () => {
