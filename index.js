@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+app.use(cors({ credentials: true, origin: true }));
 const http = require("http");
 const servidor = http.createServer(app);
 var io = require('socket.io').listen(servidor);
@@ -11,7 +13,6 @@ const modelTemp = require("./models/Modeltemp");
 ///base de datos
 const conectarDB = require("./config/db");
 conectarDB();
-const expressStatusMonitor = require('express-status-monitor');
 
 
 //Sensores
@@ -118,10 +119,6 @@ const ondear = async () => {
 };
 
 const port = process.env.PORT || 4000;
-app.use(expressStatusMonitor({
-  websocket: io,
-  port: app.get(port)
-}));
 servidor.listen(port, "0.0.0.0", () => {
   console.log(`el puerto esta funcionando  ${port}`);
 });
